@@ -10,9 +10,11 @@ import img1 from './images/img1.png';
 import img2 from './images/img2.png';
 import styles from './shopApp.module.css';
 import { useEffect, useState } from 'react';
+import {addProduct, fetchProducts} from './apis';
+import {Product} from "./interfaces";
 
 const ShopApp: React.FC<{}> = () => {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isShowingMessage, setIsShowingMessage] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
@@ -24,12 +26,9 @@ const ShopApp: React.FC<{}> = () => {
   }, []);
 
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products').then((response) => {
-      const jsonResponse = response.json();
-      jsonResponse.then((rawData) => {
-        setProducts([...rawData]);
-        setProdCount(rawData.length);
-      });
+    fetchProducts().then((prods) => {
+      setProducts([...prods]);
+      setProdCount(prods.length);
     });
   }, []);
 
@@ -50,11 +49,7 @@ const ShopApp: React.FC<{}> = () => {
     setNumFavorites(totalFavs);
   };
 
-  const onSubmit = (payload: {
-    title: string;
-    description: string;
-    price: string;
-  }): void => {
+  const onSubmit = (payload: Product): void => {
     const updated = [...products, payload];
 
     setProducts(updated);
@@ -63,13 +58,8 @@ const ShopApp: React.FC<{}> = () => {
     setIsShowingMessage(true);
     setMessage('Adding product...');
 
-    // **this POST request doesn't actually post anything to any database**
-    fetch('https://fakestoreapi.com/products', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    })
-      .then((res) => res.json())
-      .then((json) => {
+    addProduct(payload)
+      .then((prod) => {
         (() => {
           setTimeout(() => {
             setIsShowingMessage(false);

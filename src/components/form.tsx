@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { Button } from './button';
 import styles from './form.module.css';
+import {Product} from "../interfaces";
 
 type IFormProps = {
-  'on-submit': (payload: {
-    title: string;
-    description: string;
-    price: string;
-  }) => void;
+  'on-submit': (payload: Product) => void;
 };
 
 export const Form: React.FC<IFormProps> = (props) => {
@@ -34,7 +31,7 @@ export const Form: React.FC<IFormProps> = (props) => {
     props['on-submit']({
       title: titleRef.current && titleRef.current.value,
       description: descriptionRef.current && descriptionRef.current.value,
-      price: priceRef.current && priceRef.current.value,
+      price: priceRef.current && +priceRef.current.value,
     });
 
     formRef.current?.reset();
