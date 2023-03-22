@@ -1,52 +1,53 @@
 import * as React from 'react';
 import { Button } from './button';
 import styles from './form.module.css';
-import {Product} from "../interfaces";
+import { Product } from '../interfaces';
+import { useState } from 'react';
 
 type IFormProps = {
   'on-submit': (payload: Product) => void;
 };
 
 export const Form: React.FC<IFormProps> = (props) => {
-  let formRef = React.useRef<HTMLFormElement>(null);
-  let titleRef = React.useRef<HTMLInputElement>(null);
-  let priceRef = React.useRef<HTMLInputElement>(null);
-  let descriptionRef = React.useRef<HTMLTextAreaElement>(null);
+  const [title, setTitle] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
 
-  const handleSubmit = (e: any) => {
+  const resetForm = (): void => {
+    setTitle('');
+    setPrice('');
+    setDescription('');
+  };
+
+  const handleSubmit = (e: any): void => {
     e.preventDefault();
 
-    if (!titleRef.current?.value) {
+    if (!title) {
       alert('Your product needs a title');
-
       return;
     }
 
-    if (!descriptionRef.current?.value || !priceRef.current?.value) {
+    if (!description || !price) {
       alert('Your product needs some content');
-
       return;
     }
 
     props['on-submit']({
-      title: titleRef.current && titleRef.current.value,
-      description: descriptionRef.current && descriptionRef.current.value,
-      price: priceRef.current && +priceRef.current.value,
+      title,
+      description,
+      price: +price,
     });
 
-    formRef.current?.reset();
+    resetForm();
   };
 
   return (
-    <form
-      className={styles.form}
-      onSubmit={(event) => handleSubmit(event)}
-      ref={formRef}
-    >
+    <form className={styles.form} onSubmit={handleSubmit}>
       <span className={styles.label}>Product title: *</span>
 
       <input
-        ref={titleRef}
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
         placeholder="Title..."
         defaultValue=""
         className={styles.input}
@@ -55,14 +56,17 @@ export const Form: React.FC<IFormProps> = (props) => {
       <span className={styles.label}>Product details: *</span>
 
       <input
-        ref={priceRef}
+        value={price}
+        type="number"
+        onChange={(e) => setPrice(e.target.value)}
         placeholder="Price..."
         defaultValue=""
         className={styles.input}
       />
 
       <textarea
-        ref={descriptionRef}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
         placeholder="Start typing product description here..."
         defaultValue=""
         className={styles.textarea}

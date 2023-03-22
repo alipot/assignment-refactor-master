@@ -10,8 +10,8 @@ import img1 from './images/img1.png';
 import img2 from './images/img2.png';
 import styles from './shopApp.module.css';
 import { useEffect, useState } from 'react';
-import {addProduct, fetchProducts} from './apis';
-import {Product} from "./interfaces";
+import { addProduct, fetchProducts } from './apis';
+import { Product } from './interfaces';
 
 const ShopApp: React.FC<{}> = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -58,15 +58,14 @@ const ShopApp: React.FC<{}> = () => {
     setIsShowingMessage(true);
     setMessage('Adding product...');
 
-    addProduct(payload)
-      .then((prod) => {
-        (() => {
-          setTimeout(() => {
-            setIsShowingMessage(false);
-            setMessage('');
-          }, 2000);
-        })();
-      });
+    addProduct(payload).then((prod) => {
+      (() => {
+        setTimeout(() => {
+          setIsShowingMessage(false);
+          setMessage('');
+        }, 2000);
+      })();
+    });
   };
 
   return (

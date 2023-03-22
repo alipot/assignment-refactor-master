@@ -3,5 +3,5 @@ export interface Product {
   description: string;
   price: number;
   isFavorite?: boolean;
-  rating?: { rate: number, count: number };
+  rating?: { rate: number; count: number };
 }
