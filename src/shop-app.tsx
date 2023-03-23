@@ -18,18 +18,23 @@ const ShopApp: React.FC<{}> = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
   const [numFavorites, setNumFavorites] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     document.title = 'Droppe refactor app';
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     fetchProducts()
       .then((prods) => {
         setProducts([...prods]);
       })
       .catch((err) => {
         alert(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
@@ -51,19 +56,25 @@ const ShopApp: React.FC<{}> = () => {
   };
 
   const onSubmit = (payload: Product): void => {
-    const updated = [...products, payload];
-
-    setProducts(updated);
     setIsModalOpen(false);
+    setIsLoading(true);
     setMessage('Adding product...');
 
-    addProduct(payload).then((prod) => {
-      (() => {
-        setTimeout(() => {
-          setMessage('');
-        }, 2000);
-      })();
-    });
+    addProduct(payload)
+      .then((prods) => {
+        (() => {
+          setTimeout(() => {
+            setMessage('');
+            setProducts([...products, prods]);
+          }, 2000);
+        })();
+      })
+      .catch((err) => {
+        alert(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -117,16 +128,22 @@ const ShopApp: React.FC<{}> = () => {
           )}
         </div>
 
-        <div className={styles.statsContainer}>
-          <span>Total products: {products.length}</span>
-          {' - '}
-          <span>Number of favorites: {numFavorites}</span>
-        </div>
-
-        {products.length > 0 ? (
-          <ProductList products={products} onFav={favClick} />
+        {isLoading ? (
+          'Loading Data'
         ) : (
-          <div>No product to show!</div>
+          <>
+            <div className={styles.statsContainer}>
+              <span>Total products: {products.length}</span>
+              {' - '}
+              <span>Number of favorites: {numFavorites}</span>
+            </div>
+
+            {products.length > 0 ? (
+              <ProductList products={products} onFav={favClick} />
+            ) : (
+              <div>No product to show!</div>
+            )}
+          </>
         )}
       </div>
 
