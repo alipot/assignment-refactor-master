@@ -38,21 +38,12 @@ const ShopApp: React.FC<{}> = () => {
       });
   }, []);
 
-  const favClick = (title: string): void => {
+  const favClick = (prodIndex: number, isFavValue: boolean): void => {
     const prods = _.cloneDeep(products);
-    const prodIndex = _.findIndex(prods, { title: title });
-    let currentFavs = numFavorites;
-    let totalFavs: any;
-
-    if (prods[prodIndex].isFavorite) {
-      prods[prodIndex].isFavorite = false;
-      totalFavs = --currentFavs;
-    } else {
-      totalFavs = ++currentFavs;
-      prods[prodIndex].isFavorite = true;
-    }
+    const originalArrayIndex = prods.length - prodIndex - 1;
+    prods[originalArrayIndex].isFavorite = isFavValue;
     setProducts(prods);
-    setNumFavorites(totalFavs);
+    setNumFavorites(isFavValue ? numFavorites + 1 : numFavorites - 1);
   };
 
   const onSubmit = (payload: Product): void => {

@@ -6,8 +6,8 @@ import { Product } from '../interfaces';
 export const ProductDetail: React.FC<{
   index: number;
   product: Product;
-  onFav: (title: string) => void;
-}> = ({ product, onFav }) => {
+  onFav: (prodIndex: number, isFavValue: boolean) => void;
+}> = ({ index, product, onFav }) => {
   const {
     product: productClass,
     productBody,
@@ -55,7 +55,7 @@ export const ProductDetail: React.FC<{
           className={`${actionBarItem} ${product.isFavorite ? 'active' : ''}`}
           role="button"
           onClick={() => {
-            onFav(product.title);
+            onFav(index, !product.isFavorite);
           }}
         >
           <FaStar />{' '}
@@ -70,15 +70,23 @@ export const ProductDetail: React.FC<{
 
 interface IPostsProps {
   products: Product[];
-  onFav: (title: string) => void;
+  onFav: (prodIndex: number, isFavValue: boolean) => void;
 }
 
 const ProductsList: React.FC<IPostsProps> = ({ products, onFav }) => {
   return (
     <div>
-      {products.reverse().map((prod, index) => (
-        <ProductDetail key={index} index={index} product={prod} onFav={onFav} />
-      ))}
+      {products
+        .slice()
+        .reverse()
+        .map((prod, index) => (
+          <ProductDetail
+            key={index}
+            index={index}
+            product={prod}
+            onFav={onFav}
+          />
+        ))}
     </div>
   );
 };
