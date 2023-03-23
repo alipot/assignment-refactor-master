@@ -36,7 +36,7 @@ export const ProductDetail: React.FC<{
       </p>
 
       <p>
-        <b>Price: ${+product.price}</b>
+        <b>Price: ${product.price}</b>
       </p>
 
       <p className={productBody}>
@@ -60,7 +60,7 @@ export const ProductDetail: React.FC<{
         >
           <FaStar />{' '}
           <span className={actionBarItemLabel}>
-            {!!!!product.isFavorite
+            {product.isFavorite
               ? 'Remove from favorites'
               : 'Add to favorites'}
           </span>
