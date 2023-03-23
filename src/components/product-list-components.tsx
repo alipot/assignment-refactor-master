@@ -60,9 +60,7 @@ export const ProductDetail: React.FC<{
         >
           <FaStar />{' '}
           <span className={actionBarItemLabel}>
-            {product.isFavorite
-              ? 'Remove from favorites'
-              : 'Add to favorites'}
+            {product.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
           </span>
         </span>
       </span>

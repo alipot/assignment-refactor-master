@@ -15,21 +15,22 @@ import { Product } from './interfaces';
 
 const ShopApp: React.FC<{}> = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isShowingMessage, setIsShowingMessage] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
   const [numFavorites, setNumFavorites] = useState<number>(0);
-  const [prodCount, setProdCount] = useState<number>(0);
 
   useEffect(() => {
     document.title = 'Droppe refactor app';
   }, []);
 
   useEffect(() => {
-    fetchProducts().then((prods) => {
-      setProducts([...prods]);
-      setProdCount(prods.length);
-    });
+    fetchProducts()
+      .then((prods) => {
+        setProducts([...prods]);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
   }, []);
 
   const favClick = (title: string): void => {
@@ -53,15 +54,12 @@ const ShopApp: React.FC<{}> = () => {
     const updated = [...products, payload];
 
     setProducts(updated);
-    setProdCount(updated.length);
-    setIsOpen(false);
-    setIsShowingMessage(true);
+    setIsModalOpen(false);
     setMessage('Adding product...');
 
     addProduct(payload).then((prod) => {
       (() => {
         setTimeout(() => {
-          setIsShowingMessage(false);
           setMessage('');
         }, 2000);
       })();
@@ -106,13 +104,13 @@ const ShopApp: React.FC<{}> = () => {
           <span role="button">
             <Button
               onClick={() => {
-                setIsOpen(true);
+                setIsModalOpen(true);
               }}
             >
               Send product proposal
             </Button>
           </span>
-          {isShowingMessage && (
+          {!!message && (
             <div className={styles.messageContainer}>
               <i>{message}</i>
             </div>
@@ -120,21 +118,21 @@ const ShopApp: React.FC<{}> = () => {
         </div>
 
         <div className={styles.statsContainer}>
-          <span>Total products: {prodCount}</span>
+          <span>Total products: {products.length}</span>
           {' - '}
           <span>Number of favorites: {numFavorites}</span>
         </div>
 
-        {products && !!products.length ? (
+        {products.length > 0 ? (
           <ProductList products={products} onFav={favClick} />
         ) : (
-          <div></div>
+          <div>No product to show!</div>
         )}
       </div>
 
       <>
         <Modal
-          isOpen={isOpen}
+          isOpen={isModalOpen}
           className={styles.reactModalContent}
           overlayClassName={styles.reactModalOverlay}
         >
@@ -142,7 +140,7 @@ const ShopApp: React.FC<{}> = () => {
             <div
               className={styles.modalClose}
               onClick={() => {
-                setIsOpen(false);
+                setIsModalOpen(false);
               }}
             >
               <FaTimes />
