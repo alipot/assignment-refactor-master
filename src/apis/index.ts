@@ -1,32 +1,28 @@
 import { Product } from '../interfaces';
+import Environment from '../env-config';
+import { PRODUCTS } from './endpoints';
 
-const products: Product[] = [
-  {
-    title: 'A Boxing Glove',
-    description: 'Sample Description of the Boxing glove',
-    price: 123.12,
-    rating: { rate: 3.1, count: 120 },
-  },
-  {
-    title: 'iPods',
-    description: 'Sample Description of the iPods',
-    price: 35.92,
-    rating: { rate: 4.6, count: 5402 },
-  },
-];
+const { API_BASE_URL } = Environment;
 
 export const fetchProducts = async (): Promise<Product[]> => {
-  return new Promise<Product[]>((resolve, reject) => {
-    setTimeout(() => {
-      resolve(products);
-    }, 1000);
-  });
+  try {
+    const response = await fetch(`${API_BASE_URL}${PRODUCTS}`);
+    return await response.json();
+  } catch (e) {
+    throw new Error('Unable to fetch products at the moment!');
+  }
 };
 
 export const addProduct = async (product: Product): Promise<Product> => {
-  return new Promise<Product>((resolve, reject) => {
-    setTimeout(() => {
-      resolve(product);
-    }, 1000);
-  });
+  try {
+    await (
+      await fetch(`${API_BASE_URL}${PRODUCTS}`, {
+        method: 'POST',
+        body: JSON.stringify(product),
+      })
+    ).json();
+    return product;
+  } catch (e) {
+    throw new Error('Unable to add product at the moment!');
+  }
 };

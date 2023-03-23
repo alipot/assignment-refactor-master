@@ -47,9 +47,11 @@ const ShopApp: React.FC<{}> = () => {
         return prods;
       });
 
-      setNumFavorites(prevState => isFavValue ? prevState + 1 : prevState -  1);
+      setNumFavorites((prevState) =>
+        isFavValue ? prevState + 1 : prevState - 1
+      );
     },
-    [products, numFavorites]
+    []
   );
 
   const onSubmit = (payload: Product): void => {
@@ -59,12 +61,8 @@ const ShopApp: React.FC<{}> = () => {
 
     addProduct(payload)
       .then((prods) => {
-        (() => {
-          setTimeout(() => {
-            setMessage('');
-            setProducts([...products, prods]);
-          }, 2000);
-        })();
+        setMessage('');
+        setProducts([...products, prods]);
       })
       .catch((err) => {
         alert(err.message);
@@ -103,7 +101,7 @@ const ShopApp: React.FC<{}> = () => {
           <img
             src={img2}
             style={{ maxHeight: '15rem', display: 'block' }}
-            alt="Store Image"
+            alt="Random Store"
           />
         </span>
       </>
