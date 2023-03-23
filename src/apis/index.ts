@@ -23,10 +23,10 @@ export const fetchProducts = async (): Promise<Product[]> => {
   });
 };
 
-export const addProduct = async (product: Product): Promise<Product[]> => {
-  return new Promise<Product[]>((resolve, reject) => {
+export const addProduct = async (product: Product): Promise<Product> => {
+  return new Promise<Product>((resolve, reject) => {
     setTimeout(() => {
-      resolve([...products, product]);
+      resolve(product);
     }, 1000);
   });
 };
