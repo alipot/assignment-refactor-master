@@ -40,11 +40,14 @@ const ShopApp: React.FC<{}> = () => {
 
   const favClick = useCallback(
     (prodIndex: number, isFavValue: boolean): void => {
-      const prods = _.cloneDeep(products);
-      const originalArrayIndex = prods.length - prodIndex - 1;
-      prods[originalArrayIndex].isFavorite = isFavValue;
-      setProducts(prods);
-      setNumFavorites(isFavValue ? numFavorites + 1 : numFavorites - 1);
+      setProducts((prevState) => {
+        const prods = _.cloneDeep(prevState);
+        const originalArrayIndex = prods.length - prodIndex - 1;
+        prods[originalArrayIndex].isFavorite = isFavValue;
+        return prods;
+      });
+
+      setNumFavorites(prevState => isFavValue ? prevState + 1 : prevState -  1);
     },
     [products, numFavorites]
   );
