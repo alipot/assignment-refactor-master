@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button } from './button';
+import Button from './button';
 import styles from './form.module.css';
 import { Product } from '../interfaces';
 import { useState } from 'react';

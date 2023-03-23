@@ -3,7 +3,13 @@ import { FaStar } from 'react-icons/fa';
 import styles from './product-list-components.module.css';
 import { Product } from '../interfaces';
 
-export const ProductDetail: React.FC<{
+interface ProductDetailProps {
+  index: number;
+  product: Product;
+  onFav: (prodIndex: number, isFavValue: boolean) => void;
+}
+
+const ProductDetailComponent: React.FC<{
   index: number;
   product: Product;
   onFav: (prodIndex: number, isFavValue: boolean) => void;
@@ -68,6 +74,18 @@ export const ProductDetail: React.FC<{
   );
 };
 
+const areSameProducts = (
+  prevProps: ProductDetailProps,
+  currProps: ProductDetailProps
+): boolean => {
+  return prevProps.product.isFavorite === currProps.product.isFavorite;
+};
+
+export const ProductDetail = React.memo(
+  ProductDetailComponent,
+  areSameProducts
+);
+
 interface IPostsProps {
   products: Product[];
   onFav: (prodIndex: number, isFavValue: boolean) => void;
@@ -91,4 +109,4 @@ const ProductsList: React.FC<IPostsProps> = ({ products, onFav }) => {
   );
 };
 
-export default ProductsList;
+export default React.memo(ProductsList);

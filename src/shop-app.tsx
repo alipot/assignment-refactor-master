@@ -2,14 +2,14 @@ import * as React from 'react';
 import _ from 'lodash';
 import Modal from 'react-modal';
 import { FaTimes } from 'react-icons/fa';
-import { Button } from './components/button';
+import Button from './components/button';
 import ProductList from './components/product-list-components';
 import { Form } from './components/form';
 import logo from './images/droppe-logo.png';
 import img1 from './images/img1.png';
 import img2 from './images/img2.png';
 import styles from './shopApp.module.css';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { addProduct, fetchProducts } from './apis';
 import { Product } from './interfaces';
 
@@ -38,13 +38,16 @@ const ShopApp: React.FC<{}> = () => {
       });
   }, []);
 
-  const favClick = (prodIndex: number, isFavValue: boolean): void => {
-    const prods = _.cloneDeep(products);
-    const originalArrayIndex = prods.length - prodIndex - 1;
-    prods[originalArrayIndex].isFavorite = isFavValue;
-    setProducts(prods);
-    setNumFavorites(isFavValue ? numFavorites + 1 : numFavorites - 1);
-  };
+  const favClick = useCallback(
+    (prodIndex: number, isFavValue: boolean): void => {
+      const prods = _.cloneDeep(products);
+      const originalArrayIndex = prods.length - prodIndex - 1;
+      prods[originalArrayIndex].isFavorite = isFavValue;
+      setProducts(prods);
+      setNumFavorites(isFavValue ? numFavorites + 1 : numFavorites - 1);
+    },
+    [products, numFavorites]
+  );
 
   const onSubmit = (payload: Product): void => {
     setIsModalOpen(false);
@@ -67,6 +70,10 @@ const ShopApp: React.FC<{}> = () => {
         setIsLoading(false);
       });
   };
+
+  const onOpenModal = useCallback((): void => {
+    setIsModalOpen(true);
+  }, []);
 
   return (
     <React.Fragment>
@@ -104,13 +111,7 @@ const ShopApp: React.FC<{}> = () => {
       >
         <div className={styles.buttonWrapper}>
           <span role="button">
-            <Button
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-            >
-              Send product proposal
-            </Button>
+            <Button onClick={onOpenModal}>Send product proposal</Button>
           </span>
           {!!message && (
             <div className={styles.messageContainer}>

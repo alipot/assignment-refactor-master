@@ -1,13 +1,17 @@
 import * as React from 'react';
 import styles from './button.module.css';
 
-interface props {
-  children: any;
+interface ButtonProps {
+  children: React.ReactNode;
   onClick?: () => void;
 }
 
-export const Button: React.FC<props> = ({ children, onClick }) => (
-  <button className={styles.button} onClick={onClick}>
-    {children}
-  </button>
-);
+const Button: React.FC<ButtonProps> = ({ onClick, children }) => {
+  return (
+    <button className={styles.button} onClick={(e) => onClick && onClick()}>
+      {children}
+    </button>
+  );
+};
+
+export default React.memo(Button);
