@@ -8,7 +8,7 @@ In the project directory, you can run:
 
 to install the dependencies.
 
-Set the environment variable `REACT_APP_BASE_URL` and then run:
+Set the environment variable `REACT_APP_API_BASE_URL` and then run:
 
 ### `yarn start`
 
